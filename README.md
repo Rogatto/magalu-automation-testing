@@ -79,3 +79,10 @@ magalu-automation-testing
             productAddedWithAssurance.png
             productAddedWithoutAssurance.png
 ```
+
+#### Estamos utilizando o Git Actions para a continuos delivery
+```
+magalu-automation-testing
+    \.github
+            # Git Actions
+```
