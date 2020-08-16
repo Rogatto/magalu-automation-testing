@@ -1,6 +1,6 @@
 # magazineluiza ecommerce automation testing
 
-> Para garantirmos a qualidade sobre a plataforma de ecommerce da Magazine Luiza criamos uma estrutura utilizando projeto Maven com Java, Selenium WebDriver, Junit, Cucumber, com sua execução vinculada ao Zalenium (temos a necessidade da instalação do docker em nosso sistema operacional) e a geração do relatório Extent Reports com todas as evidências.
+> Para garantirmos a qualidade sobre a plataforma de ecommerce da Magazine Luiza criamos uma estrutura utilizando projeto Maven com Java, Selenium WebDriver, Junit, Cucumber, com sua execução vinculada ao Zalenium (temos a necessidade da instalação do docker em nosso sistema operacional) e a geração do relatório customizado sobre a execução da fearures
 
 > Utilizamos para estruturar nosso projeto de automação o designer pattern de page objects sobre as páginas da Magalu.
 
@@ -68,4 +68,14 @@ magalu-automation-testing
         \generated-report
             # diretório dos relatórios sobre a automação
             \index.html
+```
+
+## Diretório com as evidências da execução
+```
+magalu-automation-testing
+    \evidences
+            # diretório das evidências geradas sobre a automação
+            productFounded.png
+            productAddedWithAssurance.png
+            productAddedWithoutAssurance.png
 ```

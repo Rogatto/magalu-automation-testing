@@ -1,6 +1,8 @@
 package steps;
 
 import static utils.PrintScreen.efetuaPrint;
+
+import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -66,7 +68,7 @@ public class MagaluEndToEndSteps {
   public void devemosTerORetornoDoProdutoSobreABuscaEfetuadaComSeuValorEDescricao()
       throws IOException {
     efetuaPrint(absolutePath + "/evidences/productFounded.png", driver);
-
+    driver.quit();
     Assert.assertNotNull(productValue);
   }
 
@@ -83,18 +85,39 @@ public class MagaluEndToEndSteps {
 
   @Then("devemos ter as informações do produto vinculados da sacola para a compra")
   public void devemosTerAsInformacoesDoProdutoVinculadosDaSacolaParaACompra() throws IOException {
-    log.info("Product added to wallet");
+    log.info("Product added to wallet with assurance");
 
     if(productAdded){
-      efetuaPrint(absolutePath + "/evidences/productAdded.png", driver);
+      efetuaPrint(absolutePath + "/evidences/productAddedWithAssurance.png", driver);
+      driver.quit();
       Assert.assertTrue(productAdded);
     } else {
       Assert.fail();
     }
   }
 
-  @AfterClass
-  public void tearsDown(){
-    driver.quit();
+  @Given("que estamos na tela de consulta da magazine luiza para consultar produto")
+  public void queEstamosNaTelaDeConsultaDaMagazineLuizaParaConsultarProduto() {
+    driver.get(PropertiesUtils.extractHostMagalu());
+  }
+
+  @When("selecionamos o produto {string} para adicionar ao carrinho sem garantia clicando em continuar")
+  public void selecionamosOProdutoParaAdicionarAoCarrinhoSemGarantiaClicandoEmContinuar(
+      String product) {
+    productAdded = mainPageMagazine.addProductToOrder(product, false);
+  }
+
+  @Then("devemos ter as informações do produto vinculados da sacola para a compra sem a garantia selecionada")
+  public void devemosTerAsInformaçõesDoProdutoVinculadosDaSacolaParaACompraSemAGarantiaSelecionada()
+      throws IOException {
+    log.info("Product added to wallet without assurance");
+
+    if(productAdded){
+      efetuaPrint(absolutePath + "/evidences/productAddedWithoutAssurance.png", driver);
+      driver.quit();
+      Assert.assertTrue(productAdded);
+    } else {
+      Assert.fail();
+    }
   }
 }

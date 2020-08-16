@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        plugin = {"json:target/cucumber-report/cucumber.json", "html:target/cucumber-html-report.html"},
+        plugin = {"json:target/cucumber-report/cucumber.json", "html:target/cucumber-report/cucumber-html-report.html"},
         features = {"src/test/java/features/FluxoEndToEndMagalu.feature"},
         glue = {"steps"}
 )

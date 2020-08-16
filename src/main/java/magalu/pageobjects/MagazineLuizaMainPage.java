@@ -29,7 +29,7 @@ public class MagazineLuizaMainPage {
     driver.findElement(searchButton).click();
 
     WebDriverWait wait = new WebDriverWait(driver, 15);
-    wait.until(ExpectedConditions.visibilityOfElementLocated(productPrice));
+    wait.until(ExpectedConditions.elementToBeClickable(productPrice));
 
     return driver.findElement(productPrice).getText();
   }
@@ -61,6 +61,10 @@ public class MagazineLuizaMainPage {
          js.executeScript("window.scrollBy(0,1000)");
 
          driver.findElement(By.linkText("continuar")).click();
+
+         wait.until(ExpectedConditions.elementToBeClickable(By.className("BasketContinue-button")));
+         driver.findElement(By.className("BasketContinue-button")).click();
+
          isProductAddToOrder = true;
       }
     return isProductAddToOrder;
