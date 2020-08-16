@@ -1,0 +1,7 @@
+body, .navbar, .footer {
+  background-color: black !important;
+}
+
+h3, h4, h5, .nav-link {
+  color: white !important;
+}
