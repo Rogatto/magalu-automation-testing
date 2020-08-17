@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -21,30 +22,27 @@ public class MagazineLuizaMainPage {
   private final By searchButton = By.id("btnHeaderSearch");
   private final By walletProductButton = By.xpath("/html/body/div[3]/div[5]/div[1]/div[4]/div[2]/button[2]");
   private final By warrantyButton = By.id("rf-warranty");
-  private final By productPrice = By.className("nm-price-container");
+  private final By productName = By.className("nm-product-name");
 
-  public String searchProduct(String product){
+  public String searchProduct(String product) throws InterruptedException {
     driver.findElement(searchField).clear();
     driver.findElement(searchField).sendKeys(product);
     driver.findElement(searchButton).click();
-
+    
     WebDriverWait wait = new WebDriverWait(driver, 15);
-    wait.until(ExpectedConditions.elementToBeClickable(productPrice));
+    wait.until(ExpectedConditions.elementToBeClickable(productName));
 
-    return driver.findElement(productPrice).getText();
+    return driver.findElement(productName).getText();
   }
 
-  public boolean addProductToOrder(String product, boolean isAddWarrantProtect){
+  public boolean addProductToOrder(String product, boolean isAddWarrantProtect)
+      throws InterruptedException {
 
     searchProduct(product);
 
     boolean isProductAddToOrder = false;
 
     String totalProduct = driver.findElement(By.className("nm-total-results")).getText();
-
-    System.out.println("Total of products founded: " + totalProduct);
-
-    driver.findElement(productPrice).click();
 
     WebDriverWait wait = new WebDriverWait(driver, 15);
     wait.until(ExpectedConditions.elementToBeClickable(walletProductButton));
@@ -61,9 +59,6 @@ public class MagazineLuizaMainPage {
          js.executeScript("window.scrollBy(0,1000)");
 
          driver.findElement(By.linkText("continuar")).click();
-
-         wait.until(ExpectedConditions.elementToBeClickable(By.className("BasketContinue-button")));
-         driver.findElement(By.className("BasketContinue-button")).click();
 
          isProductAddToOrder = true;
       }

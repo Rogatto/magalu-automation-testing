@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class WaitElementHelp {
 
-    private static int timeForTimeout = 40;
+    private static final int timeForTimeout = 40;
 
     public static void byElementToBeClickable (WebDriver driver, By byElement) {
 

@@ -17,3 +17,9 @@ Feature: Fluxo end to end de compra sobre o ecommerce da Magalu
     Given que estamos na tela de consulta da magazine luiza para consultar produto
     When selecionamos o produto "iPhone 11 Apple 256GB Preto 6,1” 12MP - iOS" para adicionar ao carrinho sem garantia clicando em continuar
     Then devemos ter as informações do produto vinculados da sacola para a compra sem a garantia selecionada
+
+  Scenario: Adicionar produto ao carrinho e efetuar a exclusão do mesmo produto no carrinho
+    Given que estamos na tela de consulta da magazine luiza para consultar de outro produto
+    When selecionamos o produto "iPhone 11 Apple 256GB Preto 6,1” 12MP - iOS" para adicionar ao carrinho
+    And clicar no botão para excluir produto do carrinho
+    Then devemos ter as informações do produto vinculados da sacola excluidos com a mensagem de "Sua sacola está vazia"

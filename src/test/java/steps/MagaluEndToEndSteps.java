@@ -3,7 +3,9 @@ package steps;
 import static utils.PrintScreen.efetuaPrint;
 
 import io.cucumber.java.After;
+import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -13,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import magalu.pageobjects.MagazineLuizaMainPage;
 import org.junit.AfterClass;
 import org.junit.Assert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.BrowserType;
@@ -20,6 +23,7 @@ import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import utils.ConfigureDriver;
 import utils.PropertiesUtils;
+import utils.WaitElementHelp;
 
 @Slf4j
 public class MagaluEndToEndSteps {
@@ -30,6 +34,8 @@ public class MagaluEndToEndSteps {
   public String productValue;
   private String product;
   boolean productAdded;
+  private String currentMessage;
+  private By backetPageTitle = By.className("BasketPage-title");
 
   @Before
   public void setUp() throws MalformedURLException {
@@ -59,9 +65,9 @@ public class MagaluEndToEndSteps {
   }
 
   @When("efetuo a busca pelo produto {string}")
-  public void efetuoABuscaPeloProduto(String product) {
+  public void efetuoABuscaPeloProduto(String product) throws InterruptedException {
     productValue = mainPageMagazine.searchProduct(product);
-    log.info("Product value: " + productValue);
+    log.info("Product name: " + productValue);
   }
 
   @Then("devemos ter o retorno do produto sobre a busca efetuada com seu valor e descrição")
@@ -79,13 +85,16 @@ public class MagaluEndToEndSteps {
 
   @When("selecionamos o produto {string} para adicionar ao carrinho com garantia clicando em continuar")
   public void selecionamosOProdutoParaAdicionarAoCarrinhoComGarantiaClicandoEmContinuar(
-      String product) {
+      String product) throws InterruptedException {
     productAdded = mainPageMagazine.addProductToOrder(product, true);
   }
 
   @Then("devemos ter as informações do produto vinculados da sacola para a compra")
   public void devemosTerAsInformacoesDoProdutoVinculadosDaSacolaParaACompra() throws IOException {
     log.info("Product added to wallet with assurance");
+
+    String text = driver.findElement(backetPageTitle).getText();
+    WaitElementHelp.byTextToBePresentInElement(driver, backetPageTitle, text);
 
     if(productAdded){
       efetuaPrint(absolutePath + "/evidences/productAddedWithAssurance.png", driver);
@@ -103,7 +112,7 @@ public class MagaluEndToEndSteps {
 
   @When("selecionamos o produto {string} para adicionar ao carrinho sem garantia clicando em continuar")
   public void selecionamosOProdutoParaAdicionarAoCarrinhoSemGarantiaClicandoEmContinuar(
-      String product) {
+      String product) throws InterruptedException {
     productAdded = mainPageMagazine.addProductToOrder(product, false);
   }
 
@@ -112,6 +121,9 @@ public class MagaluEndToEndSteps {
       throws IOException {
     log.info("Product added to wallet without assurance");
 
+    String text = driver.findElement(backetPageTitle).getText();
+    WaitElementHelp.byTextToBePresentInElement(driver, backetPageTitle, text);
+
     if(productAdded){
       efetuaPrint(absolutePath + "/evidences/productAddedWithoutAssurance.png", driver);
       driver.quit();
@@ -119,5 +131,34 @@ public class MagaluEndToEndSteps {
     } else {
       Assert.fail();
     }
+  }
+
+  @Given("que estamos na tela de consulta da magazine luiza para consultar de outro produto")
+  public void queEstamosNaTelaDeConsultaDaMagazineLuizaParaConsultarDeOutroProduto() {
+    driver.get(PropertiesUtils.extractHostMagalu());
+  }
+
+  @When("selecionamos o produto {string} para adicionar ao carrinho")
+  public void selecionamosOProdutoParaAdicionarAoCarrinho(String product)
+      throws InterruptedException {
+    productAdded = mainPageMagazine.addProductToOrder(product, false);
+  }
+
+  @And("clicar no botão para excluir produto do carrinho")
+  public void clicarNoBotãoParaExcluirProdutoDoCarrinho() {
+    driver.findElement(By.className("BasketItem-delete-label")).click();
+  }
+
+  @Then("devemos ter as informações do produto vinculados da sacola excluidos com a mensagem de {string}")
+  public void devemosTerAsInformaçõesDoProdutoVinculadosDaSacolaExcluidosComAMensagemDe(
+      String message) throws IOException {
+
+    WaitElementHelp.byTextToBePresentInElement(driver, By.className("EmptyBasket-title"), message);
+    currentMessage = driver.findElement(By.className("EmptyBasket-title")).getText();
+
+    efetuaPrint(absolutePath + "/evidences/EmptyBasketProduct.png", driver);
+
+    driver.quit();
+    Assert.assertEquals(currentMessage, message);
   }
 }
