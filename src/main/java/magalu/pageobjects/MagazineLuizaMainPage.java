@@ -25,11 +25,14 @@ public class MagazineLuizaMainPage {
   private final By productName = By.className("nm-product-name");
 
   public String searchProduct(String product) throws InterruptedException {
+
+    WebDriverWait wait = new WebDriverWait(driver, 15);
+    wait.until(ExpectedConditions.elementToBeClickable(searchField));
+
     driver.findElement(searchField).clear();
     driver.findElement(searchField).sendKeys(product);
     driver.findElement(searchButton).click();
-    
-    WebDriverWait wait = new WebDriverWait(driver, 15);
+
     wait.until(ExpectedConditions.elementToBeClickable(productName));
 
     return driver.findElement(productName).getText();
@@ -40,9 +43,9 @@ public class MagazineLuizaMainPage {
 
     searchProduct(product);
 
-    boolean isProductAddToOrder = false;
+    driver.findElement(productName).click();
 
-    String totalProduct = driver.findElement(By.className("nm-total-results")).getText();
+    boolean isProductAddToOrder = false;
 
     WebDriverWait wait = new WebDriverWait(driver, 15);
     wait.until(ExpectedConditions.elementToBeClickable(walletProductButton));
